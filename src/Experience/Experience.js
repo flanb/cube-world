@@ -8,6 +8,8 @@ import Resources from "./Utils/Resources.js";
 
 import sources from "./sources.js";
 import { Mesh, Scene } from "three";
+import PhysicsWorld from "./PhysicsWorld.js";
+import Controls from "./Utils/Controls.js";
 
 let instance = null;
 
@@ -29,10 +31,12 @@ export default class Experience {
     this.debug = new Debug();
     this.sizes = new Sizes();
     this.time = new Time();
+    this.controls = new Controls();
     this.scene = new Scene();
     this.resources = new Resources(sources);
     this.camera = new Camera();
     this.renderer = new Renderer();
+    this.physicsWorld = new PhysicsWorld();
     this.world = new World();
 
     // Resize event
@@ -53,8 +57,11 @@ export default class Experience {
 
   update() {
     this.camera.update();
+    this.physicsWorld.update();
     this.world.update();
     this.renderer.update();
+
+    if (this.debug.active) this.debug.update();
   }
 
   destroy() {

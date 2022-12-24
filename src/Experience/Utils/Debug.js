@@ -1,4 +1,5 @@
 import { Pane } from "tweakpane";
+import Stats from "three/examples/jsm/libs/stats.module.js";
 
 export default class Debug {
   constructor() {
@@ -6,6 +7,15 @@ export default class Debug {
 
     if (this.active) {
       this.ui = new Pane();
+
+      this.stats = Stats();
+      document.body.appendChild(this.stats.dom);
+    }
+  }
+
+  update() {
+    if (this.active) {
+      this.stats.update();
     }
   }
 }

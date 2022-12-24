@@ -10,6 +10,8 @@ export default class Camera {
     this.canvas = this.experience.canvas;
 
     this.setInstance();
+
+    if (this.followObject) return;
     this.setControls();
   }
 
@@ -26,7 +28,10 @@ export default class Camera {
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
-    this.controls.enableDamping = true;
+  }
+
+  follow(_follow) {
+    this.followObject = _follow;
   }
 
   resize() {
@@ -35,6 +40,17 @@ export default class Camera {
   }
 
   update() {
+    if (this.followObject) {
+      this.instance.position.copy(this.followObject.position);
+      this.instance.position.y += 10;
+      this.instance.position.z += 10;
+      this.instance.lookAt(
+        this.followObject.position.x,
+        this.followObject.position.y,
+        this.followObject.position.z
+      );
+      return;
+    }
     this.controls.update();
   }
 }
