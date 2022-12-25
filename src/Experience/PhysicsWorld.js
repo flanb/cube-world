@@ -12,7 +12,7 @@ export default class PhysicsWorld {
     };
 
     this.setInstance();
-    this.setDebug();
+    if (this.debug.active) this.setDebug();
   }
 
   setDebug() {

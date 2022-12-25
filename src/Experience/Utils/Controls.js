@@ -1,15 +1,12 @@
-import EventEmitter from "./EventEmitter.js";
-
-export default class Controls extends EventEmitter {
+export default class Controls {
   constructor() {
-    super();
-
     this.keys = {
       ArrowUp: false,
       ArrowDown: false,
       ArrowLeft: false,
       ArrowRight: false,
       " ": false,
+      Shift: false,
     };
 
     this.setEvents();

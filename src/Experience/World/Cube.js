@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import * as CANNON from "cannon-es";
 import Experience from "../Experience.js";
+import { lerp } from "three/src/math/MathUtils.js";
 
 export default class Cube {
   constructor(_position = new THREE.Vector3(0, 2, 0)) {
@@ -84,12 +85,33 @@ export default class Cube {
     }
   }
 
+  expand() {
+    if (this.controls.keys.Shift) {
+      this.mesh.scale.y = lerp(this.mesh.scale.y, 2, 0.25);
+      this.physicsShape.halfExtents.y = lerp(
+        this.physicsShape.halfExtents.y,
+        1,
+        0.25
+      );
+      this.physicsShape.updateConvexPolyhedronRepresentation();
+      return;
+    }
+    this.mesh.scale.y = lerp(this.mesh.scale.y, 1, 0.25);
+    this.physicsShape.halfExtents.y = lerp(
+      this.physicsShape.halfExtents.y,
+      0.5,
+      0.25
+    );
+    this.physicsShape.updateConvexPolyhedronRepresentation();
+  }
+
   update() {
     this.mesh.position.copy(this.physicsBody.position);
     this.mesh.quaternion.copy(this.physicsBody.quaternion);
 
     this.setRaycaster();
     this.move();
+    this.expand();
   }
 
   destroy() {
