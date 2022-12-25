@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import CANNON from "cannon";
+import * as CANNON from "cannon-es";
 import Experience from "../Experience.js";
 
 export default class Floor {
@@ -15,7 +15,7 @@ export default class Floor {
   }
 
   setGeometry() {
-    this.geometry = new THREE.PlaneGeometry(10, 10, 100, 100);
+    this.geometry = new THREE.PlaneGeometry(10, 10, 1, 1);
   }
 
   setMaterial() {
@@ -32,6 +32,8 @@ export default class Floor {
 
   setPhysics() {
     this.physicsShape = new CANNON.Plane();
+    //size of the floor
+
     this.physicsBody = new CANNON.Body({
       mass: 0,
       shape: this.physicsShape,

@@ -1,5 +1,5 @@
 import Experience from "./Experience.js";
-import CANNON from "cannon";
+import * as CANNON from "cannon-es";
 export default class PhysicsWorld {
   constructor() {
     this.experience = new Experience();
@@ -59,7 +59,6 @@ export default class PhysicsWorld {
     this.instance = new CANNON.World();
     this.instance.gravity.set(this.gravity.x, this.gravity.y, this.gravity.z);
     this.instance.broadphase = new CANNON.NaiveBroadphase();
-    this.instance.solver.iterations = 10;
   }
 
   addBody(_body) {

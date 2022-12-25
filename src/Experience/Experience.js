@@ -10,6 +10,7 @@ import sources from "./sources.js";
 import { Mesh, Scene } from "three";
 import PhysicsWorld from "./PhysicsWorld.js";
 import Controls from "./Utils/Controls.js";
+import Mouse from "./Utils/Mouse.js";
 
 let instance = null;
 
@@ -32,6 +33,7 @@ export default class Experience {
     this.sizes = new Sizes();
     this.time = new Time();
     this.controls = new Controls();
+    this.mouse = new Mouse();
     this.scene = new Scene();
     this.resources = new Resources(sources);
     this.camera = new Camera();

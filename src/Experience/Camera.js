@@ -8,6 +8,7 @@ export default class Camera {
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
     this.canvas = this.experience.canvas;
+    this.mouse = this.experience.mouse;
 
     this.setInstance();
 
@@ -42,7 +43,9 @@ export default class Camera {
   update() {
     if (this.followObject) {
       this.instance.position.copy(this.followObject.position);
-      this.instance.position.y += 10;
+      this.instance.position.x += this.mouse.cursor.x * 3;
+      this.instance.position.y += this.mouse.cursor.y * 3;
+      this.instance.position.y += 5;
       this.instance.position.z += 10;
       this.instance.lookAt(
         this.followObject.position.x,

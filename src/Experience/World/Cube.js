@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import CANNON from "cannon";
+import * as CANNON from "cannon-es";
 import Experience from "../Experience.js";
 
 export default class Cube {
@@ -15,6 +15,7 @@ export default class Cube {
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
+    this.setRaycaster();
     this.setPhysics();
   }
 
@@ -33,6 +34,16 @@ export default class Cube {
     this.mesh.position.copy(this.position);
     this.camera.follow(this.mesh);
     this.scene.add(this.mesh);
+  }
+
+  setRaycaster() {
+    const raycaster = new THREE.Raycaster(
+      this.mesh.position,
+      new THREE.Vector3(0, -1, 0),
+      0,
+      1
+    );
+    this.intersects = raycaster.intersectObjects(this.scene.children);
   }
 
   setPhysics() {
@@ -68,7 +79,7 @@ export default class Cube {
     if (this.controls.keys.ArrowRight) {
       this.physicsBody.velocity.x = 0.5;
     }
-    if (this.controls.keys[" "] && this.physicsBody.position.y < 1) {
+    if (this.controls.keys[" "] && this.intersects.length > 0) {
       this.physicsBody.velocity.y = 2;
     }
   }
@@ -77,6 +88,7 @@ export default class Cube {
     this.mesh.position.copy(this.physicsBody.position);
     this.mesh.quaternion.copy(this.physicsBody.quaternion);
 
+    this.setRaycaster();
     this.move();
   }
 
