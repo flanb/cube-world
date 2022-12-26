@@ -1,7 +1,7 @@
 import Experience from "../Experience.js";
 import Environment from "./Environment.js";
 import Floor from "./Floor.js";
-import Cube from "./Cube.js";
+import Cube from "./Cube/Cube.js";
 import { Vector3 } from "three";
 import Platforms from "./Platforms.js";
 

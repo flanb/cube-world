@@ -5,7 +5,6 @@ export default class Controls {
       ArrowDown: false,
       ArrowLeft: false,
       ArrowRight: false,
-      " ": false,
       Shift: false,
     };
 
