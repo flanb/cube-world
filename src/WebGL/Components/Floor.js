@@ -3,7 +3,9 @@ import * as CANNON from "cannon-es";
 import {
   CircleGeometry,
   Mesh,
+  MeshBasicMaterial,
   MeshStandardMaterial,
+  PlaneGeometry,
   RepeatWrapping,
   sRGBEncoding,
 } from "three";
@@ -15,14 +17,14 @@ export default class Floor {
     this.resources = this.experience.resources;
 
     this.setGeometry();
-    this.setTextures();
+    // this.setTextures();
     this.setMaterial();
     this.setMesh();
     this.setPhysics();
   }
 
   setGeometry() {
-    this.geometry = new CircleGeometry(5, 64);
+    this.geometry = new PlaneGeometry(10, 10);
   }
 
   setTextures() {
@@ -41,9 +43,8 @@ export default class Floor {
   }
 
   setMaterial() {
-    this.material = new MeshStandardMaterial({
-      map: this.textures.color,
-      normalMap: this.textures.normal,
+    this.material = new MeshBasicMaterial({
+      color: 0x00ff00,
     });
   }
 
