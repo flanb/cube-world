@@ -1,10 +1,8 @@
 import Experience from "webgl/Experience.js";
 import * as CANNON from "cannon-es";
 import {
-  CircleGeometry,
   Mesh,
   MeshBasicMaterial,
-  MeshStandardMaterial,
   PlaneGeometry,
   RepeatWrapping,
   sRGBEncoding,

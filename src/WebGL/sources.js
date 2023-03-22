@@ -26,4 +26,9 @@ export default [
     type: "gltf",
     path: "models/Fox/glTF/Fox.gltf",
   },
+  {
+    name: "crateColorTexture",
+    type: "texture",
+    path: "textures/crate/color.jpg",
+  },
 ];

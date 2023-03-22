@@ -3,7 +3,13 @@ import Experience from "webgl/Experience.js";
 import { lerp } from "three/src/math/MathUtils.js";
 import fragmentShader from "./fragmentShader.frag";
 import vertexShader from "./vertexShader.vert";
-import { Vector3, BoxGeometry, Mesh, ShaderMaterial } from "three";
+import {
+  Vector3,
+  BoxGeometry,
+  Mesh,
+  ShaderMaterial,
+  MeshBasicMaterial,
+} from "three";
 import InputManager from "utils/InputManager.js";
 
 export default class Cube {
@@ -11,7 +17,6 @@ export default class Cube {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.physicsWorld = this.experience.physicsWorld;
-    this.camera = this.experience.camera;
 
     this.position = _position;
 
@@ -27,16 +32,26 @@ export default class Cube {
   }
 
   setMaterial() {
-    this.material = new ShaderMaterial({
-      fragmentShader,
-      vertexShader,
+    const color = 0xffffff;
+    this.faceMaterial = new MeshBasicMaterial({
+      color,
+      map: this.experience.resources.items.crateColorTexture,
+    });
+    this.material = new MeshBasicMaterial({
+      color,
     });
   }
 
   setMesh() {
-    this.mesh = new Mesh(this.geometry, this.material);
+    this.mesh = new Mesh(this.geometry, [
+      this.material,
+      this.material,
+      this.material,
+      this.material,
+      this.faceMaterial, //TODO: fix multiple draw calls with cube with one UV
+      this.material,
+    ]);
     this.mesh.position.copy(this.position);
-    // this.camera.follow(this.mesh);
     this.scene.add(this.mesh);
   }
 
