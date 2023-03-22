@@ -1,16 +1,13 @@
-import Debug from "./Utils/Debug.js";
-import Sizes from "./Utils/Sizes.js";
-import Time from "./Utils/Time.js";
+import Debug from "utils/Debug.js";
+import Sizes from "utils/Sizes.js";
+import Time from "utils/Time.js";
 import Camera from "./Camera.js";
 import Renderer from "./Renderer.js";
-import World from "./World/World.js";
-import Resources from "./Utils/Resources.js";
-
+import Resources from "utils/Resources.js";
+import SceneManager from "utils/SceneManager.js";
 import sources from "./sources.js";
 import { Mesh, Scene } from "three";
 import PhysicsWorld from "./PhysicsWorld.js";
-import Controls from "./Utils/Controls.js";
-import Mouse from "./Utils/Mouse.js";
 
 let instance = null;
 
@@ -29,17 +26,15 @@ export default class Experience {
     this.canvas = _canvas;
 
     // Setup
-    this.debug = new Debug();
     this.sizes = new Sizes();
     this.time = new Time();
-    this.controls = new Controls();
-    this.mouse = new Mouse();
     this.scene = new Scene();
+    this.debug = new Debug();
     this.resources = new Resources(sources);
     this.camera = new Camera();
-    this.renderer = new Renderer();
     this.physicsWorld = new PhysicsWorld();
-    this.world = new World();
+    this.renderer = new Renderer();
+    this.activeScene = new SceneManager();
 
     // Resize event
     this.sizes.on("resize", () => {
@@ -59,11 +54,10 @@ export default class Experience {
 
   update() {
     this.camera.update();
+    this.activeScene.update();
     this.physicsWorld.update();
-    this.world.update();
     this.renderer.update();
-
-    if (this.debug.active) this.debug.update();
+    this.debug.update();
   }
 
   destroy() {

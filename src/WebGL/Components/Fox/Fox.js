@@ -1,13 +1,14 @@
-import * as THREE from "three";
-import Experience from "../Experience.js";
+import Experience from "webgl/Experience.js";
+import { AnimationMixer, Mesh } from "three";
+import InputManager from "utils/InputManager.js";
 
 export default class Fox {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-    this.time = this.experience.time;
     this.debug = this.experience.debug;
+    this.time = this.experience.time;
 
     // Debug
     if (this.debug.active) {
@@ -21,15 +22,17 @@ export default class Fox {
 
     this.setModel();
     this.setAnimation();
+    this.setInputs();
   }
 
   setModel() {
     this.model = this.resource.scene;
     this.model.scale.set(0.02, 0.02, 0.02);
+    this.model.name = "fox";
     this.scene.add(this.model);
 
     this.model.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
+      if (child instanceof Mesh) {
         child.castShadow = true;
       }
     });
@@ -39,7 +42,7 @@ export default class Fox {
     this.animation = {};
 
     // Mixer
-    this.animation.mixer = new THREE.AnimationMixer(this.model);
+    this.animation.mixer = new AnimationMixer(this.model);
 
     // Actions
     this.animation.actions = {};
@@ -92,6 +95,26 @@ export default class Fox {
         .addButton({ title: "playRunning", label: "playRunning" })
         .on("click", debugObject.playRunning);
     }
+  }
+
+  setInputs() {
+    let isMoving = false;
+    InputManager.on("up", (value) => {
+      if (value && !isMoving) {
+        this.animation.play("walking");
+        isMoving = true;
+      } else if (!value && isMoving) {
+        this.animation.play("idle");
+        isMoving = false;
+      }
+    });
+    InputManager.on("shift", (value) => {
+      if (value && isMoving) {
+        this.animation.play("running");
+      } else if (!value && isMoving) {
+        this.animation.play("walking");
+      }
+    });
   }
 
   update() {
