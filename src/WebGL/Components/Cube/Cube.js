@@ -17,6 +17,7 @@ export default class Cube {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.physicsWorld = this.experience.physicsWorld;
+    this.camera = this.experience.camera.instance;
 
     this.position = _position;
 
@@ -48,10 +49,11 @@ export default class Cube {
       this.material,
       this.material,
       this.material,
-      this.faceMaterial, //TODO: fix multiple draw calls with cube with one UV
+      this.faceMaterial, //TODO: fix multiple draw calls with cube with one UV (https://discourse.threejs.org/t/reduce-draw-calls-for-box-with-image-texture-on-one-face/29195)
       this.material,
     ]);
     this.mesh.position.copy(this.position);
+    this.mesh.name = "playerCube";
     this.scene.add(this.mesh);
   }
 
@@ -142,6 +144,11 @@ export default class Cube {
 
     this.move();
     this.expand();
+
+    this.camera.position.copy(
+      this.mesh.position.clone().add(new Vector3(0, 5, 10))
+    );
+    this.camera.lookAt(this.mesh.position);
   }
 
   destroy() {

@@ -57,6 +57,9 @@ class InputManager extends EventEmitter {
     addEventListener("mouseup", ({ event }) => {
       this.trigger("mouseup", [event]);
     });
+    addEventListener("mousemove", (event) => {
+      this.trigger("mousemove", [event]);
+    });
   }
 }
 

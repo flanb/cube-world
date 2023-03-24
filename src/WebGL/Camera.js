@@ -1,6 +1,7 @@
 import Experience from "./Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PerspectiveCamera } from "three";
+import InputManager from "utils/InputManager.js";
 
 export default class Camera {
   constructor() {
@@ -12,8 +13,8 @@ export default class Camera {
 
     this.options = {
       fov: 35,
-      near: 1,
-      far: 100,
+      near: 2,
+      far: 50,
       position: {
         x: 6,
         y: 4,
