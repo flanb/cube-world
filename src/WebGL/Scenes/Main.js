@@ -17,7 +17,7 @@ export default class Main {
       this.cube = new Cube();
 
       new Platform(new Vector3(3, 2, 0), new Vector3(2, 0.25, 2));
-      new Platform(new Vector3(6, 4, 0), new Vector3(2, 0.25, 2));
+      new Platform(new Vector3(5, 4, 0), new Vector3(2, 0.25, 2));
     });
   }
 
