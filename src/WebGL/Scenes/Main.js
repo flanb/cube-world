@@ -1,6 +1,8 @@
 import Experience from "webgl/Experience.js";
 import Floor from "components/Floor.js";
 import Cube from "components/Cube/Cube.js";
+import Platform from "components/Platform.js";
+import { Vector3 } from "three";
 
 export default class Main {
   constructor() {
@@ -13,6 +15,9 @@ export default class Main {
       // Setup
       this.floor = new Floor();
       this.cube = new Cube();
+
+      new Platform(new Vector3(3, 2, 0), new Vector3(2, 0.25, 2));
+      new Platform(new Vector3(6, 4, 0), new Vector3(2, 0.25, 2));
     });
   }
 
