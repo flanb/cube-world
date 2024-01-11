@@ -39,17 +39,18 @@ export default class Map {
 		this.experience.physicsWorld.addBody(staticBody)
 		this.model.traverse((child) => {
 			if (child.isMesh) {
+				if (movingMeshes.includes(child.parent)) return
 				const shapeResult = threeToCannon(child, {
 					type: ShapeType.BOX,
 				})
-
+				const shapePosition = new CANNON.Vec3()
 				const shapeQuaternion = new Quaternion()
+				if (shapeResult.offset) shapePosition.copy(shapeResult.offset)
 				if (shapeResult.orientation) shapeQuaternion.copy(shapeResult.orientation)
-				const combinedPosition = shapeResult.offset.vadd(child.position)
+				const combinedPosition = shapePosition.vadd(child.position)
 				const combinedQuaternion = shapeQuaternion.multiply(child.quaternion)
 
 				if (child.name.toLowerCase().includes('moving')) {
-					if (movingMeshes.includes(child.parent)) return
 					movingMeshes.push(child.parent)
 					const movingBody = new CANNON.Body({
 						mass: 0,
@@ -70,11 +71,9 @@ export default class Map {
 		this.animation.update(this.experience.time.delta * 0.001)
 		this.dynamicBodies.forEach(({ body, mesh }) => {
 			if (!this.bodyPreviousPosition) body.position.copy(mesh.position)
-			const velocityX = mesh.position.x - this.bodyPreviousPosition?.x
+			const velocity = mesh.position.clone().sub(body.position).multiplyScalar(this.experience.time.delta)
 			this.bodyPreviousPosition = mesh.position.clone()
-			if (velocityX) {
-				body.velocity.x = velocityX * 20
-			}
+			body.velocity.copy(velocity)
 		})
 	}
 
