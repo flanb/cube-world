@@ -1,27 +1,27 @@
-import Experience from "webgl/Experience.js";
-import Floor from "components/Floor.js";
-import Cube from "components/Cube/Cube.js";
-import Platform from "components/Platform.js";
-import { Vector3 } from "three";
+import Experience from '../Experience.js'
+import Reset from 'components/Reset.js'
+import Cube from 'components/Cube/Cube.js'
+import Environment from 'components/Environment.js'
+import Map from 'components/Map.js'
 
 export default class Main {
-  constructor() {
-    this.experience = new Experience();
-    this.scene = this.experience.scene;
-    this.resources = this.experience.resources;
+	constructor() {
+		this.experience = new Experience()
+		this.scene = this.experience.scene
+		this.resources = this.experience.resources
 
-    // Wait for resources
-    this.resources.on("ready", () => {
-      // Setup
-      this.floor = new Floor();
-      this.cube = new Cube();
+		// Wait for resources
+		this.resources.on('ready', () => {
+			// Setup
+			this.environment = new Environment()
+			this.reset = new Reset()
+			this.cube = new Cube()
+			this.map = new Map()
+		})
+	}
 
-      new Platform(new Vector3(3, 2, 0), new Vector3(2, 0.25, 2));
-      new Platform(new Vector3(5, 4, 0), new Vector3(2, 0.25, 2));
-    });
-  }
-
-  update() {
-    if (this.cube) this.cube.update();
-  }
+	update() {
+		if (this.cube) this.cube.update()
+		if (this.map) this.map.update()
+	}
 }

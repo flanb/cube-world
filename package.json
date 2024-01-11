@@ -1,24 +1,28 @@
 {
-  "name": "cube-world",
-  "description": "",
-  "private": false,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite --port 3000",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "cannon-es": "^0.20.0",
-    "three": "^0.150.1"
-  },
-  "devDependencies": {
-    "@tweakpane/plugin-essentials": "^0.1.8",
-    "cannon-es-debugger": "^1.0.0",
-    "stats.js": "^0.17.0",
-    "tweakpane": "^3.1.7",
-    "vite": "^4.2.1",
-    "vite-plugin-glslify": "^2.0.1"
-  }
+	"name": "threejs-vite-starter",
+	"description": "A starter template for Three.js with Vite",
+	"private": false,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite --port 3000",
+		"build": "vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"cannon-es": "^0.20.0",
+		"cannon-es-debugger": "^1.0.0",
+		"three": "^0.160.0",
+		"three-to-cannon": "^5.0.1"
+	},
+	"devDependencies": {
+		"@tweakpane/core": "^2.0.3",
+		"@tweakpane/plugin-essentials": "0.2.1",
+		"@types/three": "^0.160.0",
+		"stats.js": "^0.17.0",
+		"tweakpane": "^4.0.3",
+		"tweakpane-plugin-media": "github:flanb/tweakpane-plugin-media",
+		"vite": "^5.0.10",
+		"vite-plugin-glslify": "^2.0.2"
+	}
 }

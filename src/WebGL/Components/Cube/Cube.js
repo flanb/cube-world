@@ -1,160 +1,142 @@
-import * as CANNON from "cannon-es";
-import Experience from "webgl/Experience.js";
-import { lerp } from "three/src/math/MathUtils.js";
-import fragmentShader from "./fragmentShader.frag";
-import vertexShader from "./vertexShader.vert";
-import {
-  Vector3,
-  BoxGeometry,
-  Mesh,
-  ShaderMaterial,
-  MeshBasicMaterial,
-} from "three";
-import InputManager from "utils/InputManager.js";
+import * as CANNON from 'cannon-es'
+import Experience from 'webgl/Experience.js'
+import { lerp } from 'three/src/math/MathUtils.js'
+import { Vector3, BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
+import InputManager from 'utils/InputManager.js'
 
 export default class Cube {
-  constructor(_position = new Vector3(0, 2, 0)) {
-    this.experience = new Experience();
-    this.scene = this.experience.scene;
-    this.physicsWorld = this.experience.physicsWorld;
-    this.camera = this.experience.camera.instance;
+	constructor(_position = new Vector3(2, 2, -2)) {
+		this.experience = new Experience()
+		this.scene = this.experience.scene
+		this.physicsWorld = this.experience.physicsWorld
+		this.camera = this.experience.camera
 
-    this.position = _position;
+		this.position = _position
 
-    this.setGeometry();
-    this.setMaterial();
-    this.setMesh();
-    this.setPhysics();
-    this.setControls();
-  }
+		this.setGeometry()
+		this.setMaterial()
+		this.setMesh()
+		this.setPhysics()
+		this.setControls()
+	}
 
-  setGeometry() {
-    this.geometry = new BoxGeometry(1, 1, 1);
-  }
+	setGeometry() {
+		this.geometry = new BoxGeometry()
+	}
 
-  setMaterial() {
-    const color = 0xffffff;
-    this.faceMaterial = new MeshBasicMaterial({
-      color,
-      map: this.experience.resources.items.crateColorTexture,
-    });
-    this.material = new MeshBasicMaterial({
-      color,
-    });
-  }
+	setMaterial() {
+		this.material = new MeshBasicMaterial({
+			color: 0xff0000,
+		})
+		this.faceMaterial = new MeshBasicMaterial({
+			color: 0x0000ff,
+		})
+	}
 
-  setMesh() {
-    this.mesh = new Mesh(this.geometry, [
-      this.material,
-      this.material,
-      this.material,
-      this.material,
-      this.faceMaterial, //TODO: fix multiple draw calls with cube with one UV (https://discourse.threejs.org/t/reduce-draw-calls-for-box-with-image-texture-on-one-face/29195)
-      this.material,
-    ]);
-    this.mesh.position.copy(this.position);
-    this.mesh.name = "playerCube";
-    this.scene.add(this.mesh);
-  }
+	setMesh() {
+		this.mesh = new Mesh(this.geometry, [
+			this.material,
+			this.material,
+			this.material,
+			this.material,
+			this.material,
+			this.faceMaterial,
+		])
+		this.mesh.position.copy(this.position)
+		this.mesh.name = 'playerCube'
+		this.scene.add(this.mesh)
+	}
 
-  setPhysics() {
-    this.physicsShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5));
-    this.physicsBody = new CANNON.Body({
-      mass: 1,
-      shape: this.physicsShape,
-      position: new CANNON.Vec3(
-        this.mesh.position.x,
-        this.mesh.position.y,
-        this.mesh.position.z
-      ),
-      quaternion: new CANNON.Quaternion(
-        this.mesh.quaternion.x,
-        this.mesh.quaternion.y,
-        this.mesh.quaternion.z,
-        this.mesh.quaternion.w
-      ),
-    });
-    this.physicsWorld.addBody(this.physicsBody);
-  }
+	setPhysics() {
+		this.physicsShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
+		this.physicsBody = new CANNON.Body({
+			mass: 1,
+			shape: this.physicsShape,
+			name: 'playerCube',
+			position: new CANNON.Vec3(this.mesh.position.x, this.mesh.position.y, this.mesh.position.z),
+			quaternion: new CANNON.Quaternion(
+				this.mesh.quaternion.x,
+				this.mesh.quaternion.y,
+				this.mesh.quaternion.z,
+				this.mesh.quaternion.w,
+			),
+		})
+		this.physicsBody.addEventListener('collide', (event) => {
+			this.moveWith = null
+			if (event.body.name === 'moving') {
+				this.moveWith = event.body
+			}
+			if (event.body.name === 'reset') {
+				this.physicsBody.position.copy(this.position)
+			}
+		})
+		this.physicsWorld.addBody(this.physicsBody)
+	}
 
-  setControls() {
-    this.controls = {
-      up: false,
-      down: false,
-      left: false,
-      right: false,
-      space: false,
-    };
-    InputManager.on("up", (value) => {
-      this.controls.up = value;
-    });
-    InputManager.on("down", (value) => {
-      this.controls.down = value;
-    });
-    InputManager.on("left", (value) => {
-      this.controls.left = value;
-    });
-    InputManager.on("right", (value) => {
-      this.controls.right = value;
-    });
-    InputManager.on("space", (value) => {
-      this.controls.space = value;
-    });
-  }
+	setControls() {
+		this.controls = {
+			up: false,
+			down: false,
+			left: false,
+			right: false,
+			space: false,
+		}
+		InputManager.on('up', (value) => {
+			this.controls.up = value
+		})
+		InputManager.on('down', (value) => {
+			this.controls.down = value
+		})
+		InputManager.on('left', (value) => {
+			this.controls.left = value
+		})
+		InputManager.on('right', (value) => {
+			this.controls.right = value
+		})
+		InputManager.on('space', (value) => {
+			this.controls.space = value
+		})
+	}
 
-  move() {
-    if (this.controls.up) {
-      this.physicsBody.velocity.z = -0.5;
-    }
-    if (this.controls.down) {
-      this.physicsBody.velocity.z = 0.5;
-    }
-    if (this.controls.left) {
-      this.physicsBody.velocity.x = -0.5;
-    }
-    if (this.controls.right) {
-      this.physicsBody.velocity.x = 0.5;
-    }
-  }
+	move() {
+		if (this.controls.up) {
+			this.physicsBody.velocity.z = -0.5
+		}
+		if (this.controls.down) {
+			this.physicsBody.velocity.z = 0.5
+		}
+		if (this.controls.left) {
+			this.physicsBody.velocity.x = -0.5
+		}
+		if (this.controls.right) {
+			this.physicsBody.velocity.x = 0.5
+		}
+		if (this.moveWith) {
+			this.physicsBody.velocity.addScaledVector(1, this.moveWith.velocity)
+		}
+	}
 
-  expand() {
-    if (this.controls.space) {
-      this.mesh.scale.y = lerp(this.mesh.scale.y, 2, 0.25);
-      this.physicsShape.halfExtents.y = lerp(
-        this.physicsShape.halfExtents.y,
-        1,
-        0.25
-      );
-      this.physicsShape.updateConvexPolyhedronRepresentation();
-      return;
-    }
+	expand() {
+		if (this.controls.space) {
+			this.mesh.scale.y = lerp(this.mesh.scale.y, 2, 0.25)
+			this.physicsShape.halfExtents.y = lerp(this.physicsShape.halfExtents.y, 1, 0.25)
+			this.physicsShape.updateConvexPolyhedronRepresentation()
+			return
+		}
 
-    this.mesh.scale.y = lerp(this.mesh.scale.y, 1, 0.25);
-    this.physicsShape.halfExtents.y = lerp(
-      this.physicsShape.halfExtents.y,
-      0.5,
-      0.25
-    );
-    this.physicsShape.updateConvexPolyhedronRepresentation();
-  }
+		this.mesh.scale.y = lerp(this.mesh.scale.y, 1, 0.25)
+		this.physicsShape.halfExtents.y = lerp(this.physicsShape.halfExtents.y, 0.5, 0.25)
+		this.physicsShape.updateConvexPolyhedronRepresentation()
+	}
 
-  update() {
-    this.mesh.position.copy(this.physicsBody.position);
-    this.mesh.quaternion.copy(this.physicsBody.quaternion);
+	update() {
+		this.mesh.position.copy(this.physicsBody.position)
+		this.mesh.quaternion.copy(this.physicsBody.quaternion)
 
-    this.move();
-    this.expand();
+		this.move()
+		this.expand()
 
-    this.camera.position.copy(
-      this.mesh.position.clone().add(new Vector3(0, 5, 10))
-    );
-    this.camera.lookAt(this.mesh.position);
-  }
-
-  destroy() {
-    this.physicsWorld.removeBody(this.physicsBody);
-    this.scene.remove(this.mesh);
-    this.mesh.geometry.dispose();
-    this.mesh.material.dispose();
-  }
+		this.camera.sceneCamera.position.copy(this.mesh.position.clone().add(new Vector3(0, 5, 10)))
+		this.camera.sceneCamera.lookAt(this.mesh.position)
+	}
 }
