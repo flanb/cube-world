@@ -10,8 +10,6 @@ export default class PhysicsWorld extends EventEmitter {
 		this.debug = this.experience.debug
 		this.scene = this.experience.scene
 
-		this.gravity = new Vec3(0, -1, 0)
-
 		this.setInstance()
 		if (this.debug.active) this.setDebug()
 	}
@@ -22,16 +20,12 @@ export default class PhysicsWorld extends EventEmitter {
 			expanded: false,
 		})
 
-		this.debugFolder
-			.addBinding(this, 'gravity', {
-				label: 'gravityX',
-				min: -10,
-				max: 10,
-				step: 0.1,
-			})
-			.on('change', () => {
-				this.instance.gravity.copy(this.gravity)
-			})
+		this.debugFolder.addBinding(this.instance, 'gravity', {
+			label: 'gravityX',
+			min: -10,
+			max: 10,
+			step: 0.1,
+		})
 
 		this.debugFolder
 			.addButton({
@@ -53,7 +47,7 @@ export default class PhysicsWorld extends EventEmitter {
 
 	setInstance() {
 		this.instance = new World()
-		this.instance.gravity.copy(this.gravity)
+		this.instance.gravity.copy(new Vec3(0, -9.82, 0))
 	}
 
 	addBody(_body) {
@@ -61,7 +55,8 @@ export default class PhysicsWorld extends EventEmitter {
 	}
 
 	update() {
-		this.instance.step(1 / 60, this.time.delta, 3)
+		this.instance.step(1 / 60, this.time.delta * 0.001)
+
 		if (this.cannonDebugger) this.cannonDebugger.update()
 	}
 }

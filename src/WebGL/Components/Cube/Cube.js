@@ -58,7 +58,7 @@ export default class Cube {
 				this.mesh.quaternion.x,
 				this.mesh.quaternion.y,
 				this.mesh.quaternion.z,
-				this.mesh.quaternion.w,
+				this.mesh.quaternion.w
 			),
 		})
 		this.physicsBody.addEventListener('collide', (event) => {
@@ -99,17 +99,18 @@ export default class Cube {
 	}
 
 	move() {
+		const speed = 2
 		if (this.controls.up) {
-			this.physicsBody.velocity.z = -0.5
+			this.physicsBody.velocity.z = -speed
 		}
 		if (this.controls.down) {
-			this.physicsBody.velocity.z = 0.5
+			this.physicsBody.velocity.z = speed
 		}
 		if (this.controls.left) {
-			this.physicsBody.velocity.x = -0.5
+			this.physicsBody.velocity.x = -speed
 		}
 		if (this.controls.right) {
-			this.physicsBody.velocity.x = 0.5
+			this.physicsBody.velocity.x = speed
 		}
 		if (this.moveWith) {
 			this.physicsBody.velocity.addScaledVector(1, this.moveWith.velocity)
@@ -117,15 +118,15 @@ export default class Cube {
 	}
 
 	expand() {
-		if (this.controls.space) {
-			this.mesh.scale.y = lerp(this.mesh.scale.y, 2, 0.25)
-			this.physicsShape.halfExtents.y = lerp(this.physicsShape.halfExtents.y, 1, 0.25)
-			this.physicsShape.updateConvexPolyhedronRepresentation()
-			return
-		}
+		const interpolationFactor = 1 - Math.pow(0.0000000000000001, this.experience.time.delta * 0.001)
 
-		this.mesh.scale.y = lerp(this.mesh.scale.y, 1, 0.25)
-		this.physicsShape.halfExtents.y = lerp(this.physicsShape.halfExtents.y, 0.5, 0.25)
+		if (this.controls.space) {
+			this.mesh.scale.y = lerp(this.mesh.scale.y, 2, interpolationFactor)
+			this.physicsShape.halfExtents.y = lerp(this.physicsShape.halfExtents.y, 1, interpolationFactor)
+		} else {
+			this.mesh.scale.y = lerp(this.mesh.scale.y, 1, interpolationFactor)
+			this.physicsShape.halfExtents.y = lerp(this.physicsShape.halfExtents.y, 0.5, interpolationFactor)
+		}
 		this.physicsShape.updateConvexPolyhedronRepresentation()
 	}
 
