@@ -27,7 +27,9 @@ export default class Map {
 			model: this.resource.scene,
 			animations: this.resource.animations,
 		})
-		this.animation.fadeAnimation(this.animation.animations[0].name, { loop: true, yoyo: true })
+		this.resource.animations.forEach((animation) => {
+			this.animation.playAnimation(animation.name, { loop: true, yoyo: true })
+		})
 	}
 
 	setPhysics() {
@@ -38,8 +40,7 @@ export default class Map {
 		})
 		this.experience.physicsWorld.addBody(staticBody)
 		this.model.traverse((child) => {
-			if (child.isMesh) {
-				if (movingMeshes.includes(child.parent)) return
+			if (child.isMesh && !(movingMeshes.includes(child.parent) || child.name.includes('_1'))) {
 				const shapeResult = threeToCannon(child, {
 					type: ShapeType.BOX,
 				})

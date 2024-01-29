@@ -5,7 +5,7 @@ import { Vector3, BoxGeometry, Mesh, MeshBasicMaterial } from 'three'
 import InputManager from 'utils/InputManager.js'
 
 export default class Cube {
-	constructor(_position = new Vector3(2, 2, -2)) {
+	constructor(_position = new Vector3(0, 2, 0)) {
 		this.experience = new Experience()
 		this.scene = this.experience.scene
 		this.physicsWorld = this.experience.physicsWorld

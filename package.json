@@ -12,7 +12,7 @@
 	"dependencies": {
 		"cannon-es": "^0.20.0",
 		"cannon-es-debugger": "^1.0.0",
-		"three": "^0.160.0",
+		"three": "^0.160.1",
 		"three-to-cannon": "^5.0.1"
 	},
 	"devDependencies": {
@@ -22,7 +22,7 @@
 		"stats.js": "^0.17.0",
 		"tweakpane": "^4.0.3",
 		"tweakpane-plugin-media": "github:flanb/tweakpane-plugin-media",
-		"vite": "^5.0.10",
+		"vite": "^5.0.12",
 		"vite-plugin-glslify": "^2.0.2"
 	}
 }
